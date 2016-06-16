@@ -5,7 +5,18 @@ Atomikos JTA provider as global transaction manager to coordinate GemFire/Geode 
 transaction manager. Atomikos is JTA compliant and can be integrated with Gemfire/Geode to perform XA transaction across Geode, 
 JPA/JDBC and JMS operations. 
 
-## Geode/Gemfire JTA Integration
+## Atomikos Gemfire Integration:
+1. Add the following SpringBoot starters to your POM:
+ * spring-boot-starter-data-gemfire
+ * spring-boot-starter-data-jpa
+ * spring-boot-starter-jta-atomikos
+2. Start an In-Memory JNDI provider (`SimpleNamingContextBuilder`) *before* the application context is initialized.
+3. After the Application Context initialization (e.g. in `@PostConstruct`) *bind* the Atomikos UserTransaction manager to the JNDI
+using name: `java:comp/UserTransaction`
+
+Now you can use Spring `@Transaction` annotations to start global (manged by Atomikos) transactions. If Gemfire operation (like put/get) is performed within such transaction it will atomatically participate in the global transaction. 
+
+## Geode/Gemfire JTA Overview
 Gemfire/Geode provides the following [JTA Global Transactions](http://geode.docs.pivotal.io/docs/developing/transactions/JTA_transactions.html) integration options.
 
 1. Have Gemfire/Geode act as JTA transaction manager - Because the Gemfire JTA manager implementation is incomplete and not JTA compliant it
@@ -22,17 +33,6 @@ global transactions hosted by this external JTA transaction manager: [Coordinate
 
 Because Gemfire/Gedoe require JNDI provider to lookup the global transactions we have build a simple (in-memory) JNDI provider: `io.pivotal.poc.gemfire.gtx.jndi.SimpleNamingContextBuilder`.
 Note: `SimpleNamingContextBuilder` re-uses the code from the `spring-test` project. If you know a more elgant way to create in-memory JNDI providers please let me know!
-
-## Atomikos integration stesp:
-1. Add the following starters to your POM:
- * spring-boot-starter-data-gemfire
- * spring-boot-starter-data-jpa
- * spring-boot-starter-jta-atomikos
-2. Create and activate the In-Memory JNDI provider (`SimpleNamingContextBuilder`) *before* the application context is initialized.
-3. After the Application Context initialization (e.g. in `@PostConstruct`) *bind* the Atomikos UserTransaction manager to the JNDI
-using name: `java:comp/UserTransaction`
-
-Now you can use Spring `@Transaction` annotations to start global (manged by Atomikos) transactions. If Gemfire operation (like put/get) is performed within such transaction it will atomatically participate in the global transaction. 
 
 ## Build
 ``` 
