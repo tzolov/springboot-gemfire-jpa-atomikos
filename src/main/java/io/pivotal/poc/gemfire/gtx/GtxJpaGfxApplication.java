@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import org.slf4j.Logger;
@@ -100,16 +99,21 @@ public class GtxJpaGfxApplication implements CommandLineRunner {
         .setDataPolicy(PARTITION)
         .create("testRegion");
 
+    // put new entity in the region
     region.put(KEY_ONE, 999);
 
     LOG.info("Cache Server Started");
 
+    // Within XA transaction read the entity update an external DB
     txService.syncDBFromRegion(region);
 
+    // Make sure the external DB is updated
     LOG.info(">>> Found JPA Entry:" + txService.findEntry(TransactionalService.TEST_PERSON_NAME));
 
+    // Within XA transaction read from External DB and create new entity in Gemfire
     txService.syncRegionFromDB(region);
 
+    // Make sure the new entitiy is created
     LOG.info(">>> New Region Entry:" + region.get(TransactionalService.TEST_PERSON_NAME));
 
     Thread.sleep(5000);
