@@ -32,6 +32,8 @@ Note: `SimpleNamingContextBuilder` re-uses the code from the `spring-test` proje
 3. After the Application Context initialization (e.g. in `@PostConstruct`) *bind* the Atomikos UserTransaction manager to the JNDI
 using name: `java:comp/UserTransaction`
 
+Now you can use Spring `@Transaction` annotations to start global (manged by Atomikos) transactions. If Gemfire operation (like put/get) is performed within such transaction it will atomatically participate in the global transaction. 
+
 ## Build
 ``` 
 mvn clean install
