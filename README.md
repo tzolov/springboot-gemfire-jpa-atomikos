@@ -1,5 +1,5 @@
 # springboot-gemfire-jpa-atomikos
-Atomikos JTA provider as global transaction manager to coordinate GemFire/Geode cache transactions with JPA/JDBC (and/or JMS) transactions.
+Atomikos JTA provider as global transaction manager to coordinate GemFire/Geode cache transactions with JPA/JDBC and/or JMS resources.
 
 [Atomikos](https://github.com/atomikos/transactions-essentials) is light-weight (e.g. out-of-container), embeddable global 
 transaction manager. Atomikos is JTA compliant and can be integrated with Gemfire/Geode to perform XA transaction across Geode, 
@@ -16,16 +16,14 @@ using name: `java:comp/UserTransaction`
 
 Now you can use Spring `@Transaction` annotations to start global (manged by Atomikos) transactions. If Gemfire operation (like put/get) is performed within such transaction it will atomatically participate in the global transaction. 
 
-## Geode/Gemfire JTA Overview
-Gemfire/Geode provides the following [JTA Global Transactions](http://geode.docs.pivotal.io/docs/developing/transactions/JTA_transactions.html) integration options.
+## Geode/Gemfire JTA Background
+Out of the box, Gemfire/Geode provides the following [JTA Global Transactions](http://geode.docs.pivotal.io/docs/developing/transactions/JTA_transactions.html) integration options:
 
-1. Have Gemfire/Geode act as JTA transaction manager - Because the Gemfire JTA manager implementation is incomplete and not JTA compliant it
-could cause synchronization and transaction coordination problems. In its current state you better not use it as JTA manager!
-2. Coordinate with an external JTA transaction manager in a container (such as WebLogic or JBoss). Also GemFire can be set as the "last resource" while using a container. 
-While this approach provides a reliable JTA capabilities it requires a heavey-weight JEE container. 
+1. Have Gemfire/Geode act as JTA transaction manager - Mind that Gemfire JTA manager is **not JTA compliant** and could cause synchronization and transaction coordination problems. In its current state you better not use it as JTA manager!
+2. Coordinate with an external JTA transaction manager in a container (such as WebLogic or JBoss). Also GemFire can be set as the "last resource" while using a container. - While this approach provides a reliable JTA capabilities it requires a heavey-weight JEE container. 
 
-Using [SpringBoot Atomikos](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jta.html#_using_an_atomikos_transaction_manager) 
-integration allows as to extend option 2 and use Atomikos as an external JTA manager without the need of running a J2EE container. 
+The [SpringBoot Atomikos](http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jta.html#_using_an_atomikos_transaction_manager) 
+integration extends option (2) by using Atomikos as an external JTA manager without the need of running a J2EE container. 
 
 At startup GemFire looks for a TransactionManager `javax.transaction.TransactionManager` that has been bound to its `JNDI` context. 
 When GemFire finds such an external transaction manager, all GemFire region operations (such as get and put) will participate in 
