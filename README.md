@@ -7,7 +7,7 @@ JPA/JDBC and JMS operations.
 
 ## Atomikos Gemfire Integration:
 1. Add the following SpringBoot starters to your POM:
- * spring-boot-starter-data-gemfire
+ * spring-boot-starter-data-gemfire (or spring-data-geode)
  * spring-boot-starter-data-jpa
  * spring-boot-starter-jta-atomikos
 2. Start an In-Memory JNDI provider (`SimpleNamingContextBuilder`) *before* the application context is initialized.
@@ -32,9 +32,14 @@ global transactions hosted by this external JTA transaction manager: [Coordinate
 Because Gemfire/Gedoe require JNDI provider to lookup the global transactions we have build a simple (in-memory) JNDI provider: `io.pivotal.poc.gemfire.gtx.jndi.SimpleNamingContextBuilder`.
 Note: `SimpleNamingContextBuilder` re-uses the code from the `spring-test` project. If you know a more elgant way to create in-memory JNDI providers please let me know!
 
-## Build
+## Build (default with Gemfire)
 ``` 
 mvn clean install
+```
+
+#### Build with Apache Geode
+```
+mvn clean install -Pgeode
 ```
 
 ## Run

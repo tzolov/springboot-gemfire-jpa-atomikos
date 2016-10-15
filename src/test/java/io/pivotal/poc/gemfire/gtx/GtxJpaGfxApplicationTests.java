@@ -15,14 +15,14 @@
  */
 package io.pivotal.poc.gemfire.gtx;
 
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GtxJpaGfxApplication.class)
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GtxJpaGfxApplication.class)
 public class GtxJpaGfxApplicationTests {
 
   static {
