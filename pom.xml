@@ -58,6 +58,20 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>gemfire-repository</id>
+			<name>Gemfire Repository</name>
+			<url>http://dist.gemstone.com/maven/release</url>
+		</repository>
+		<repository>
+			<id>gemfire-release-repo</id>
+			<name>Pivotal GemFire Release Repository</name>
+			<url>https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire</url>
+		</repository>
+	</repositories>
+
+
 	<profiles>
 		<profile>
 			<id>geode</id>
@@ -83,7 +97,7 @@
 				<dependency>
 					<groupId>com.gemstone.gemfire</groupId>
 					<artifactId>gemfire</artifactId>
-					<version>8.2.1</version>
+					<version>8.2.5</version>
 					<exclusions>
 						<exclusion>
 							<artifactId>spring-web</artifactId>
